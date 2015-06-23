@@ -1,0 +1,157 @@
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="tree.css" />
+    <script src="tree.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="tools">
+            
+        </div>
+        <div class="content">
+        </div>
+        
+    </div>
+    <script>
+        //add buttons
+        var btnAddPage = new Button({ text: "Add Page", appendTo: ".tools" });
+        btnAddPage.on("click", function (e) {
+            canvas.items().add(new Page({ text: "new Page" }));
+        })
+        var btnAddImage = new Button({ text: "Add Image", appendTo: ".tools" });
+        btnAddImage.on("click", function (e) {
+            canvas.items().add(new Image());
+        })
+
+        //add property
+        var pGrid = new PropertyGrid();
+        pGrid.appendTo('.tools');
+
+
+        var canvas = new Canvas();
+        canvas.appendTo(".content");
+        canvas.on("selected", function (e) {
+            console.log("selected");
+            pGrid.object(e.item);
+        })
+
+        //fill Canvas
+
+        var xStart = 50;
+        var yStart = 10;
+        var xStep = 200;
+        var yStep = 150;
+
+        function getX(n) {
+            return xStart+(xStep*n)
+        }
+
+        function getY(n) {
+            return yStart + (yStep * n);
+        }
+
+        //1
+        var p1 = new Page({
+            position: { x: getX(2), y: getY(0) },
+            text: "Page1",
+            canvas: canvas
+        });
+
+        var p11 = new Page({
+            position: { x: getX(0), y: getY(1) },
+            text: "Page2",
+            canvas: canvas,
+            parentItem: p1
+        });
+
+        var p12 = new Page({
+            position: { x: getX(1), y: getY(1) },
+            text: "Page3",
+            canvas: canvas,
+            parentItem: p1
+        });
+
+
+        var p13 = new Page({
+            position: { x: getX(2), y: getY(1) },
+            text: "Page4",
+            canvas: canvas,
+            parentItem: p1
+        });
+
+        var p14 = new Page({
+            position: { x: getX(3), y: getY(1) },
+            text: "Page5",
+            canvas: canvas,
+            parentItem: p1
+        });
+
+var p15 = new Page({
+    position: { x: getX(4), y: getY(1) },
+    text: "Page6",
+    canvas: canvas,
+    parentItem: p1
+});
+
+var p111 = new Image({
+    position: { x: getX(0), y: getY(2) },
+    canvas: canvas,
+    parentItem: p11
+});
+
+        var p112 = new Image({
+            position: { x: getX(0), y: getY(3)+50 },
+            canvas: canvas,
+            parentItem: p111,
+            image: "images/002.jpg",
+            alt: "JPEG image"
+        });
+
+        var p211 = new Image({
+            position: { x: getX(1), y: getY(2) },
+            canvas: canvas,
+            image: "images/004.jpg",
+            parentItem: p12
+        });
+
+        var p212 = new Image({
+            position: { x: getX(1), y: getY(3) + 50 },
+            canvas: canvas,
+            parentItem: p211,
+            image: "images/003.jpg",
+            alt: "JPEG image"
+        });
+
+        var p311 = new Image({
+            position: { x: getX(3), y: getY(2) },
+            canvas: canvas,
+            image: "images/006.jpg",
+            parentItem: p14
+        });
+
+        var p312 = new Image({
+            position: { x: getX(2), y: getY(3) + 50 },
+            canvas: canvas,
+            parentItem: p311,
+            image: "images/007.jpg",
+            alt: "JPEG image"
+        });
+        var p313 = new Image({
+            position: { x: getX(3), y: getY(3) + 50 },
+            canvas: canvas,
+            parentItem: p311,
+            image: "images/008.jpg",
+            alt: "JPEG image"
+        });
+        var p313 = new Image({
+            position: { x: getX(4), y: getY(3) + 50 },
+            canvas: canvas,
+            parentItem: p311,
+            image: "images/009.jpg",
+            alt: "JPEG image"
+        });
+        
+    </script>
+</body>
+</html>

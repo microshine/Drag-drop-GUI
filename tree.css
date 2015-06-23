@@ -1,0 +1,163 @@
+.container {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.tools {
+    min-width: 250px;
+    background-color: darkgray;
+    display: table-cell;
+}
+
+    .tools .el-button {
+        background:gray;
+        color: white;
+        text-align:center;
+        margin: 0 auto;
+        width: 100px;
+        padding: 10px 20px;
+        margin-top:20px;
+    }
+
+.content {
+    width: 100%;
+    display: table-cell;
+}
+
+.canvas {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -o-user-select: none;
+}
+
+.el-taked {
+    opacity: 0.5;
+    z-index: 100;
+}
+
+/*element*/
+.selected {
+    background-color: orange;
+}
+
+.el-treeItem {
+    position: absolute;
+    min-width: 50px;
+    min-height: 50px;
+    z-index: 90;
+    background-color: rgb(245, 245, 245);
+    transition-delay: 0s;
+    transition-duration: 0.3s;
+    transition-property: box-shadow;
+    transition-timing-function: ease;
+    box-shadow: rgba(0, 0, 0, 0.117647) -1px -2px 0px 0px inset, rgba(0, 0, 0, 0) 0px 1px 1px 0px, rgba(0, 0, 0, 0) 0px 2px 3px 0px;
+}
+
+    .el-treeItem:hover {
+        cursor: move;
+        box-shadow: 0 -1px 0 rgba(0,0,0,0) inset,0 2px 3px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .el-treeItem.selected {
+        background-color: rgb(225, 225, 225);
+    }
+
+.el-page {
+    padding: 25px 10px 10px;
+}
+
+    .el-page .el-text {
+    }
+
+    .el-page .el-content {
+        width: 120px;
+        height: 50px;
+        padding-top: 20px;
+        color: rgb(120, 120, 120);
+        font-size: 12pt;
+        font-weight: bold;
+        text-align: -webkit-center;
+    }
+
+
+.el-image {
+    padding: 25px 10px 10px;
+}
+
+    .el-image .el-content {
+        background: url(images/000.png);
+        background-size: cover;
+        width: 120px;
+        height: 120px;
+    }
+
+
+.el-button {
+    position: relative;
+}
+
+    .el-button:hover {
+        cursor: pointer;
+    }
+
+.el-close {
+    width: 16px;
+    height: 16px;
+    background-image: url(images/close-icon.png);
+    background-size: cover;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+}
+
+.svg-close {
+    fill: white;
+}
+
+.el-line {
+    stroke: lightgray;
+    fill: none;
+}
+
+/*.el-line:hover {
+        stroke: orange
+    }*/
+
+.el-treeLine {
+    position: absolute;
+}
+
+.el-connector {
+    position: absolute;
+    border-radius: 100%;
+    background-color: lightgray;
+    width: 10px;
+    height: 10px;
+    z-index: 100;
+}
+
+    .el-connector:hover {
+        background-color: orange;
+        cursor: pointer;
+    }
+
+    .el-connector.top {
+        top: -5px;
+        left: 65;
+    }
+
+    .el-connector.bottom {
+        bottom: -5px;
+        left: 65px;
+    }
+
+    .el-connector.selected {
+        background-color: orange;
+    }
