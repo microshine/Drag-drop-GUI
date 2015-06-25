@@ -7,11 +7,10 @@
 <body>
     <div class="container">
         <div class="tools">
-            
+
         </div>
         <div class="content">
         </div>
-        
     </div>
     <script>
         //add buttons
@@ -87,18 +86,18 @@
             parentItem: p1
         });
 
-var p15 = new Page({
-    position: { x: getX(4), y: getY(1) },
-    text: "Page6",
-    canvas: canvas,
-    parentItem: p1
-});
+        var p15 = new Page({
+            position: { x: getX(4), y: getY(1) },
+            text: "Page6",
+            canvas: canvas,
+            parentItem: p1
+        });
 
-var p111 = new Image({
-    position: { x: getX(0), y: getY(2) },
-    canvas: canvas,
-    parentItem: p11
-});
+        var p111 = new Image({
+            position: { x: getX(0), y: getY(2) },
+            canvas: canvas,
+            parentItem: p11
+        });
 
         var p112 = new Image({
             position: { x: getX(0), y: getY(3)+50 },
@@ -151,7 +150,57 @@ var p111 = new Image({
             image: "images/009.jpg",
             alt: "JPEG image"
         });
-        
+
+        function stop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        function isImage(type) {
+            var reg = /^image\//;
+            return reg.test(type);
+        }
+
+        function fileToBase64(file, cb) {
+            var r = new FileReader();
+            r.onloadend = function () {
+                if (r.error)
+                    alert("Your browser couldn't read the specified file (error code " + r.error.code + ").");
+                else
+                    cb(btoa(r.result));
+            };
+            r.readAsBinaryString(file);
+        }
+
+        function dragAccept(e) {
+            stop(e);
+            if (e.dataTransfer.files.length > 0) {
+                console.log(e)
+                var files = e.dataTransfer.files;
+                for (var i = 0; i < files.length; i++) {
+                    (function () {
+                        var file = e.dataTransfer.files[i];
+                        fileToBase64(file, function (base64) {
+                            if (isImage(file.type)) {
+                                var image = new Image({
+                                    position: { x: e.offsetX, y: e.offsetY },
+                                    canvas: canvas,
+                                    image: "data:" + file.type + ";base64," + base64
+                                });
+                            }
+                        });
+                    })();
+                }
+            }
+        }
+        // main
+        document.ondragover = stop;
+        document.ondragleave = stop;
+        if ('FileReader' in window) {
+            canvas.node().addEventListener("drop", dragAccept);
+        }
+
+
     </script>
 </body>
 </html>
