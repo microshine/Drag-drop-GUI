@@ -16,11 +16,16 @@
         //add buttons
         var btnAddPage = new Button({ text: "Add Page", appendTo: ".tools" });
         btnAddPage.on("click", function (e) {
-            canvas.items().add(new Page({ text: "new Page" }));
+            new Page({ text: "new Page", canvas: canvas});
         })
         var btnAddImage = new Button({ text: "Add Image", appendTo: ".tools" });
         btnAddImage.on("click", function (e) {
-            canvas.items().add(new Image());
+            new Image({ canvas: canvas});
+        })
+
+        var btnOrder = new Button({ text: "Order", appendTo: ".tools" });
+        btnOrder.on("click", function (e) {
+            canvas.order();
         })
 
         //add property
@@ -52,104 +57,154 @@
 
         //1
         var p1 = new Page({
-            position: { x: getX(2), y: getY(0) },
+            //position: { x: getX(2), y: getY(0) },
             text: "Page1",
             canvas: canvas
         });
 
         var p11 = new Page({
-            position: { x: getX(0), y: getY(1) },
-            text: "Page2",
-            canvas: canvas,
+            //position: { x: getX(0), y: getY(1) },
+            text: "Page11",
             parentItem: p1
         });
 
         var p12 = new Page({
-            position: { x: getX(1), y: getY(1) },
-            text: "Page3",
-            canvas: canvas,
+            //position: { x: getX(1), y: getY(1) },
+            text: "Page12",
             parentItem: p1
         });
 
-
         var p13 = new Page({
-            position: { x: getX(2), y: getY(1) },
-            text: "Page4",
-            canvas: canvas,
+            text: "Page13",
             parentItem: p1
         });
 
         var p14 = new Page({
-            position: { x: getX(3), y: getY(1) },
-            text: "Page5",
-            canvas: canvas,
+            text: "Page14",
             parentItem: p1
         });
 
-        var p15 = new Page({
-            position: { x: getX(4), y: getY(1) },
-            text: "Page6",
-            canvas: canvas,
-            parentItem: p1
-        });
-
-        var p111 = new Image({
-            position: { x: getX(0), y: getY(2) },
-            canvas: canvas,
+        var p111 = new Page({
+            text: "Page111",
             parentItem: p11
         });
 
-        var p112 = new Image({
-            position: { x: getX(0), y: getY(3)+50 },
-            canvas: canvas,
-            parentItem: p111,
-            image: "images/002.jpg",
-            alt: "JPEG image"
+        var p112 = new Page({
+            text: "Page112",
+            parentItem: p11
+        });
+        var p113 = new Page({
+            text: "Page113",
+            parentItem: p11
         });
 
-        var p211 = new Image({
-            position: { x: getX(1), y: getY(2) },
-            canvas: canvas,
-            image: "images/004.jpg",
+        var p1111 = new Page({
+            text: "Page1111",
+            parentItem: p111
+        });
+
+        var p1121 = new Page({
+            text: "Page1121",
+            parentItem: p112
+        });
+
+        var p1122 = new Page({
+            text: "Page1122",
+            parentItem: p112
+        });
+
+        var p1131 = new Page({
+            text: "Page1131",
+            parentItem: p113
+        });
+
+        var p11311 = new Page({
+            text: "Page11311",
+            parentItem: p1131
+        });
+
+        var p11312 = new Page({
+            text: "Page11312",
+            parentItem: p1131
+        });
+
+        var p121 = new Page({
+            text: "Page121",
+            parentItem: p12
+        });
+        var p122 = new Page({
+            text: "Page122",
             parentItem: p12
         });
 
-        var p212 = new Image({
-            position: { x: getX(1), y: getY(3) + 50 },
-            canvas: canvas,
-            parentItem: p211,
-            image: "images/003.jpg",
-            alt: "JPEG image"
-        });
+        canvas.order();
+        //var p13 = new Page({
+        //    position: { x: getX(2), y: getY(1) },
+        //    text: "Page4",
+        //    parentItem: p1
+        //});
 
-        var p311 = new Image({
-            position: { x: getX(3), y: getY(2) },
-            canvas: canvas,
-            image: "images/006.jpg",
-            parentItem: p14
-        });
+        //var p14 = new Page({
+        //    position: { x: getX(3), y: getY(1) },
+        //    text: "Page5",
+        //    parentItem: p1
+        //});
 
-        var p312 = new Image({
-            position: { x: getX(2), y: getY(3) + 50 },
-            canvas: canvas,
-            parentItem: p311,
-            image: "images/007.jpg",
-            alt: "JPEG image"
-        });
-        var p313 = new Image({
-            position: { x: getX(3), y: getY(3) + 50 },
-            canvas: canvas,
-            parentItem: p311,
-            image: "images/008.jpg",
-            alt: "JPEG image"
-        });
-        var p313 = new Image({
-            position: { x: getX(4), y: getY(3) + 50 },
-            canvas: canvas,
-            parentItem: p311,
-            image: "images/009.jpg",
-            alt: "JPEG image"
-        });
+        //var p15 = new Page({
+        //    position: { x: getX(4), y: getY(1) },
+        //    text: "Page6",
+        //    parentItem: p1
+        //});
+
+        //var p111 = new Image({
+        //    position: { x: getX(0), y: getY(2) },
+        //    parentItem: p11
+        //});
+
+        //var p112 = new Image({
+        //    position: { x: getX(0), y: getY(3)+50 },
+        //    canvas: canvas,
+        //    image: "images/002.jpg",
+        //    alt: "JPEG image"
+        //});
+
+        //var p211 = new Image({
+        //    position: { x: getX(1), y: getY(2) },
+        //    image: "images/004.jpg",
+        //    parentItem: p12
+        //});
+
+        //var p212 = new Image({
+        //    position: { x: getX(1), y: getY(3) + 50 },
+        //    parentItem: p211,
+        //    image: "images/003.jpg",
+        //    alt: "JPEG image"
+        //});
+
+        //var p311 = new Image({
+        //    position: { x: getX(3), y: getY(2) },
+        //    image: "images/006.jpg",
+        //    parentItem: p14
+        //});
+
+        //var p312 = new Image({
+        //    position: { x: getX(2), y: getY(3) + 50 },
+        //    parentItem: p311,
+        //    image: "images/007.jpg",
+        //    alt: "JPEG image"
+        //});
+        //var p313 = new Image({
+        //    position: { x: getX(3), y: getY(3) + 50 },
+        //    parentItem: p311,
+        //    image: "images/008.jpg",
+        //    alt: "JPEG image"
+        //});
+        //var p313 = new Image({
+        //    position: { x: getX(4), y: getY(3) + 50 },
+        //    parentItem: p311,
+        //    image: "images/009.jpg",
+        //    alt: "JPEG image"
+        //});
 
         function stop(e) {
             e.stopPropagation();

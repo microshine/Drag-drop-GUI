@@ -169,9 +169,10 @@ function Collection() {
     function refreshIndexes(val) {
         var j = 0;
         for (var i in val) {
-            val[j++] = val[i];
-            if (i != j)
-                delete val[i];
+            var v = val[i];
+            delete val[i];
+            val[j] = v;
+            j++;
         }
     }
 
@@ -255,7 +256,7 @@ function Element() {
 
     this.html = function (s) {
         if (!isEmpty(s))
-            this.node().innerHTML= s;
+            this.node().innerHTML = s;
         return this.node().innerHTML;
     }
 
@@ -279,10 +280,10 @@ function Element() {
     }
 
     this.remove = function (node) {
-        if (isEmpty(node)){
+        if (isEmpty(node)) {
             this.node().parentNode.removeChild(this.node());
         }
-        else{
+        else {
             if (instanceOf(node, "Element"))
                 node = node.node();
             this.node().removeChild(node);
@@ -401,11 +402,46 @@ function TreeItem() {
     //elements
     var btnClose, content;
 
-    function onClose() {
-        that.node().parentNode.removeChild(that.node());
+    var _items = new Collection();
+    this.items = function (i) {
+        if (isNumber(i) && i >= 0) {
+            return _items.items(i);
+        }
+        return _items;
+    }
+
+    _items.on("beforeAdd", function (e) {
+        if (!instanceOf(e.value, "TreeItem"))
+            throw new TypeError("Valu must be instance of TreeItem");
+        e.value.canvas(that.canvas());
+    })
+
+    _items.on("add", function (e) {
+        var line = new TreeLine({
+            itemFrom: e.value,
+            itemTo: that,
+            appendTo: that.node().parentNode
+        })
+        line.draw();
+    })
+
+    that.on("close", onClose);
+
+    function onClose(e) {
+        while(that.items().length()>0) {
+            that.items(0).trigger("close");
+        }
+        var p = that.parentItem();
+        that.node().remove();
         var lines = that.lines();
         for (var i = 0; i < lines.length() ; i++) {
             lines.removeAt(i);
+        }
+        if (p) {
+            var i = p.items().indexOf(that);
+            p.items().removeAt(i);
+            if (e)
+                p.canvas().order();
         }
     }
 
@@ -431,16 +467,41 @@ function TreeItem() {
     }
 
     this.defineProperty("selected", false);
-    this.defineProperty("parentItem", null);
-    this.defineProperty("canvas", null);
     this.defineProperty("lines", new Collection(), true);
+
+    var _canvas = null;
+    this.canvas = function (v) {
+        if (!isEmpty(v)) {
+            if (!instanceOf(v, "Canvas"))
+                throw new TypeError("TreItem.canvas: Value must be Canvas");
+            if (v.items().indexOf(this) == -1) {
+                v.items().add(this);
+            }
+            _canvas = v;
+        }
+        return _canvas
+    }
+
+    var _parentItem = null;
+    this.parentItem = function (v) {
+        if (!isEmpty(v)) {
+            if (!instanceOf(v, "TreeItem"))
+                throw new TypeError("TreeItem.parentItem: Value must be TreeItem");
+            if (v.parentItem()) {
+                var p = v.parentItem();
+                var i = p.items().indexOf(that);
+                if (i >= 0) {
+                    p.items().removeAt(i);
+                }
+            }
+            v.items().add(this);
+            _parentItem = v;
+        }
+        return _parentItem;
+    }
 
     this.on("beforeChange", function (e) {
         switch (e.name) {
-            case "canvas":
-                if (!instanceOf(e.value, "Canvas"))
-                    throw new TypeError("TreItem.canvas: Value must be Canvas")
-                break;
         }
     })
 
@@ -452,19 +513,6 @@ function TreeItem() {
                 else
                     that.removeClass("selected");
                 that.trigger("selected", [e.value]);
-                break;
-            case "parentItem":
-                var line = new TreeLine({
-                    itemFrom: e.value,
-                    itemTo: that,
-                    appendTo: that.node().parentNode
-                })
-                line.draw();
-                break;
-            case "canvas":
-                if (e.value.items().indexOf(that) == -1) {
-                    e.value.items().add(that);
-                }
                 break;
         }
     })
@@ -487,7 +535,11 @@ function TreeItem() {
         //this.defineProperty("btnClose", new Button(), true);
         btnClose = new Button();
         btnClose.addClass("el-close");
-        btnClose.on("click", onClose);
+        btnClose.on("click", function (e) {
+            console.time("Close");
+            onClose(e);
+            console.timeEnd("Close");
+        });
         btnClose.appendTo(this.node());
 
         //Add content
@@ -533,8 +585,11 @@ function TreeItem() {
 function Page() {
     extend(this, TreeItem);
     var that = this;
+
     this.defineProperty("text");
     this.text.propertyGrid = true;
+
+    this.canvas = this.__proto__.canvas;
 
 
     this.on("beforeChange", function (e) {
@@ -560,6 +615,8 @@ function Image() {
     var that = this;
 
     var $image;
+
+    this.canvas = this.__proto__.canvas;
 
     this.defineProperty("image");
     this.image.propertyGrid = true;
@@ -803,6 +860,39 @@ function Canvas() {
         }
     })
 
+    var xStart = 50;
+    var yStart = 10;
+    var xStep = 150;
+    var yStep = 150;
+
+    var iCount = [];
+    function orderItem(item, i, j) {
+        var count = 0;
+        for (var _i = 0; _i < item.items().length() ; _i++) {
+            var _item = item.items(_i);
+            if (instanceOf(_item, "Page"))
+                count += orderItem(_item, i + 1, j + count);
+            count+=1;
+        }
+        var c = count > 0 ? count - 1 : count;
+        var _x = xStart + (xStep * j) + (xStep * (c / 2));
+        item.x(_x);
+        var _y = yStart + yStep * i;
+        item.y(_y);
+        return c;
+    }
+
+
+    this.order = function () {
+        //get first item
+        console.time("Order");
+        var item = this.items(0);
+        if (item) {
+            orderItem(item, 0, 0);
+        }
+        console.timeEnd("Order");
+    }
+
     var _selected = null;
     function onItemSelected(e) {
         if (_selected !== e.item) {
@@ -883,7 +973,7 @@ function PropertyGrid() {
                 for (var i in e.value) {
                     var prop = e.value[i];
                     if (prop.propertyGrid) {
-                        that.items().add(new PropertyGridItem({text: i, name: i, value: prop()}))
+                        that.items().add(new PropertyGridItem({ text: i, name: i, value: prop() }))
                     }
                 }
         }
